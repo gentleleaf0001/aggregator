@@ -1,0 +1,39 @@
+name: Sync Fork
+
+on:
+  # 每天的北京时间 1:00 进行同步
+  schedule:
+    - cron: '0 17 * * *'  # UTC时间的17:00对应北京时间1:00
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出 fork 仓库的内容
+      - name: Checkout Fork Repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # 禁用默认凭据以使用自定义令牌
+          fetch-depth: 0  # 获取完整的 git 历史记录以支持合并
+
+      # 添加原始仓库为 upstream
+      - name: Add Upstream Repository
+        run: git remote add upstream https://github.com/wzdnzd/aggregator.git
+
+      # 获取原始仓库的最新内容
+      - name: Fetch Upstream
+        run: git fetch upstream
+
+      # 合并 upstream 的更改到 fork 的主分支
+      - name: Merge Upstream Changes
+        run: |
+          git checkout main  # 确保此处与主分支名称一致
+          git merge upstream/main -m "Sync from upstream" || true
+
+      # 将合并后的更改推送回你的 fork 仓库
+      - name: Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin main
