@@ -1,8 +1,8 @@
 name: Collect
 on:
-  # 每天的00:00执行一次
-   schedule:
-    - cron: "0 0,12 * * *"  # 每天的 00:00 和 12:00 UTC 执
+  schedule:
+    - cron: "0 17 * * *"  # 每天的 17:00 UTC（即北京时间的 01:00）
+    - cron: "0 5 * * *"   # 每天的 05:00 UTC（即北京时间的 13:00）
   workflow_dispatch:
 
 concurrency:
