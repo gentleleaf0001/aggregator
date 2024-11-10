@@ -1,6 +1,8 @@
 name: Checkin
+
 on:
   schedule:
+    # 每天凌晨2:45执行
     - cron: "45 02 * * *"
   workflow_dispatch:
 
@@ -10,17 +12,34 @@ jobs:
     name: auto checkin for traffic
 
     steps:
+      # 检出代码
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: main  # 确保使用正确的分支名，可能是 main 或 master
 
-      - name: Checkin
+      # 设置 Python 环境
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
           architecture: "x64"
-      - run: python ./.github/actions/checkin/universal.py
 
+      # 执行脚本
+      - name: Run checkin script
+        run: python ./.github/actions/checkin/universal.py
+
+      # 输出时间戳
       - name: Timestamp
         run: date
+
+      # 发送 Telegram 通知
+      - name: Send Telegram Notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}  # 确保在 GitHub Secrets 中设置了 TELEGRAM_BOT_TOKEN 和 CHAT_ID
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          MESSAGE="Checkin任务已完成！$(date)"
+          curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
+            -d chat_id=$CHAT_ID \
+            -d text="$MESSAGE"
