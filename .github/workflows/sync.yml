@@ -29,10 +29,10 @@ jobs:
       - name: Merge Upstream Changes
         run: |
           git checkout main  # 确保此处与主分支名称一致
-          git merge upstream/main -m "Sync from upstream" || true
+          git merge upstream/main -m "Sync from upstream"
 
       # 将合并后的更改推送回你的 fork 仓库
-       - name: Push Changes
+      - name: Push Changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
