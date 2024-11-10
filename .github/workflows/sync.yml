@@ -36,6 +36,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # 设置 Git 用户信息
           git config --global user.email "lu.gentleleaf0001@gmail.com"
           git config --global user.name "gentleleaf0001"
+
+          # 推送更改到远程仓库
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} main
