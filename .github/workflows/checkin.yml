@@ -32,4 +32,4 @@ jobs:
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             -d chat_id=${{ secrets.CHAT_ID }} \
-            -d text="Collect script completed successfully. Workflow run ID: ${{ github.run_id }}. Timestamp: $(date)"
+            -d text="checkin任务完成！ Timestamp: $(date)"
